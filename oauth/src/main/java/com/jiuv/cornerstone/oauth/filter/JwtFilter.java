@@ -7,6 +7,7 @@ import com.jiuv.cornerstone.oauth.jwt.JwtUtil;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -32,6 +33,12 @@ public class JwtFilter extends GenericFilter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
+        // 登录和退出不解析token
+        if (StrUtil.equals(req.getRequestURI(), "/process") || StrUtil.equals(req.getRequestURI(), "/logout")) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         // 获取 token ，注意获取方式要跟前台传的方式保持一致 这里请求时注意认证方式选择 Bearer Token，会用 header 传递
         String token = req.getHeader("token");
         if (StrUtil.isBlank(token)) {
@@ -49,16 +56,9 @@ public class JwtFilter extends GenericFilter {
             responseJsonWriter((HttpServletResponse)response, result);
             return;
         }
-        UserInfo userInfo = (UserInfo) claims.get("userInfo");
-        if (Objects.isNull(userInfo)) {
-            Map<String, Object> result = new HashMap<>(2);
-            result.put("code", "500");
-            result.put("message", "获取用户信息失败");
-            responseJsonWriter((HttpServletResponse)response, result);
-            return;
-        }
-
-        log.info("当前登录用户：{}", JSONUtil.toJsonStr(userInfo));
+        String userStr = JSONUtil.toJsonStr(claims.get("userInfo"));
+        log.info("当前登录用户：{}", userStr);
+        UserInfo user = JSONUtil.toBean(userStr, UserInfo.class);
         chain.doFilter(request, response);
     }
 
