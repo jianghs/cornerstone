@@ -22,6 +22,8 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <jjwt.version>0.9.1</jjwt.version>
+        <hutool-all.version>5.6.4</hutool-all.version>
     </properties>
 
     <modules>
@@ -36,6 +38,19 @@
                 <version>2.4.5</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool-all.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

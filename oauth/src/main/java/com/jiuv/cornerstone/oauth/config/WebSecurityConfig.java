@@ -1,12 +1,13 @@
 package com.jiuv.cornerstone.oauth.config;
 
-import com.jiuv.cornerstone.oauth.filter.TestCFilter;
+import com.jiuv.cornerstone.oauth.filter.JwtFilter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -42,10 +43,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                // 关闭跨域
                 .csrf().disable().cors().and()
-                .addFilterBefore(new TestCFilter(), UsernamePasswordAuthenticationFilter.class)
-                .authorizeRequests().antMatchers("/test/**").permitAll().anyRequest().authenticated().and()
-                .formLogin().loginProcessingUrl("/process").successForwardUrl("/login/success").failureForwardUrl("/login/failure");
+                // 前后端分离设置为无状态
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                // 自定义过滤器
+                .addFilterBefore(new JwtFilter(), UsernamePasswordAuthenticationFilter.class)
+                // 认证
+                .authorizeRequests().antMatchers("/login", "/process").permitAll().anyRequest().authenticated().and()
+                // form表单登录配置，前后端分离项目可以忽略
+                .formLogin().loginProcessingUrl("/process").successForwardUrl("/login/success").failureForwardUrl("/login/failure").and()
+                // 自定义退出处理 默认情况下清除认证信息 （invalidateHttpSession），和Session 失效（invalidateHttpSession） 已经由内置的SecurityContextLogoutHandler 来完成
+                .logout().addLogoutHandler(new CustomLogoutHandler()).logoutSuccessHandler(new CustomLogoutSuccessHandler());
     }
 
 
