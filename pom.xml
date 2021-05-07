@@ -24,14 +24,23 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <jjwt.version>0.9.1</jjwt.version>
         <hutool-all.version>5.6.4</hutool-all.version>
+        <base.version>0.0.1-SNAPSHOT</base.version>
+        <oauth.version>0.0.1-SNAPSHOT</oauth.version>
     </properties>
 
     <modules>
         <module>oauth</module>
+        <module>base</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.jiuv.cornerstone</groupId>
+                <artifactId>oauth</artifactId>
+                <version>${oauth.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
@@ -41,11 +50,16 @@
             </dependency>
 
             <dependency>
+                <groupId>com.jiuv.cornerstone</groupId>
+                <artifactId>base</artifactId>
+                <version>${base.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>io.jsonwebtoken</groupId>
                 <artifactId>jjwt</artifactId>
                 <version>${jjwt.version}</version>
             </dependency>
-
 
             <dependency>
                 <groupId>cn.hutool</groupId>

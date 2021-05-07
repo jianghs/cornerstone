@@ -1,6 +1,7 @@
 package com.jiuv.cornerstone.oauth.config;
 
 import cn.hutool.json.JSONUtil;
+import com.jiuv.cornerstone.base.entity.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -30,10 +31,7 @@ public class CustomLogoutHandler implements LogoutHandler {
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         if (Objects.isNull(authentication)) {
-            Map<String, Object> result = new HashMap<>(2);
-            result.put("code", "4001");
-            result.put("message", "未登录");
-            responseJsonWriter(response, result);
+            responseJsonWriter(response, Result.failure(4001, "未登录"));
             return;
         }
         User user = (User) authentication.getPrincipal();
@@ -52,7 +50,7 @@ public class CustomLogoutHandler implements LogoutHandler {
         log.info("用户：{}，退出时间：{}，IP:{}", username, LocalDateTime.now(), ip);
     }
 
-    private static void responseJsonWriter(HttpServletResponse response, Map<String, Object> result) {
+    private static void responseJsonWriter(HttpServletResponse response, Result<Object> result) {
         response.setStatus(HttpServletResponse.SC_OK);
         response.setCharacterEncoding("utf-8");
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);

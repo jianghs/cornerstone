@@ -50,10 +50,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // 自定义过滤器
                 .addFilterBefore(new JwtFilter(), UsernamePasswordAuthenticationFilter.class)
                 // 认证
-                .authorizeRequests().antMatchers("/login", "/process").permitAll().anyRequest().authenticated().and()
-                // form表单登录配置，前后端分离项目可以忽略
-                .formLogin().loginProcessingUrl("/process").successForwardUrl("/login/success").failureForwardUrl("/login/failure").and()
-                // 自定义退出处理 默认情况下清除认证信息 （invalidateHttpSession），和Session 失效（invalidateHttpSession） 已经由内置的SecurityContextLogoutHandler 来完成
+                .authorizeRequests().antMatchers("/login", "/logout").permitAll().anyRequest().authenticated().and()
+//                // form表单登录配置，前后端分离项目可以忽略
+//                .and().formLogin().loginProcessingUrl("/process").successForwardUrl("/login/success").failureForwardUrl("/login/failure").and()
+//                // 自定义退出处理 默认情况下清除认证信息 （invalidateHttpSession），和Session 失效（invalidateHttpSession） 已经由内置的SecurityContextLogoutHandler 来完成
                 .logout().addLogoutHandler(new CustomLogoutHandler()).logoutSuccessHandler(new CustomLogoutSuccessHandler());
     }
 

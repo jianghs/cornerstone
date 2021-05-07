@@ -2,6 +2,7 @@ package com.jiuv.cornerstone.oauth.filter;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
+import com.jiuv.cornerstone.base.entity.Result;
 import com.jiuv.cornerstone.oauth.entity.UserInfo;
 import com.jiuv.cornerstone.oauth.jwt.JwtUtil;
 import io.jsonwebtoken.Claims;
@@ -34,7 +35,7 @@ public class JwtFilter extends GenericFilter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
         // 登录和退出不解析token
-        if (StrUtil.equals(req.getRequestURI(), "/process") || StrUtil.equals(req.getRequestURI(), "/logout")) {
+        if (StrUtil.equals(req.getRequestURI(), "/login") || StrUtil.equals(req.getRequestURI(), "/logout")) {
             chain.doFilter(request, response);
             return;
         }
@@ -42,18 +43,12 @@ public class JwtFilter extends GenericFilter {
         // 获取 token ，注意获取方式要跟前台传的方式保持一致 这里请求时注意认证方式选择 Bearer Token，会用 header 传递
         String token = req.getHeader("token");
         if (StrUtil.isBlank(token)) {
-            Map<String, Object> result = new HashMap<>(2);
-            result.put("code", "4001");
-            result.put("message", "未登录");
-            responseJsonWriter((HttpServletResponse)response, result);
+            responseJsonWriter((HttpServletResponse)response, Result.failure(4001, "token不得为空"));
             return;
         }
         Claims claims = JwtUtil.parseJWT(token);
         if (Objects.isNull(claims)) {
-            Map<String, Object> result = new HashMap<>(2);
-            result.put("code", "500");
-            result.put("message", "解析token失败");
-            responseJsonWriter((HttpServletResponse)response, result);
+            responseJsonWriter((HttpServletResponse)response, Result.failure(500, "解析token失败"));
             return;
         }
         String userStr = JSONUtil.toJsonStr(claims.get("userInfo"));
@@ -62,7 +57,7 @@ public class JwtFilter extends GenericFilter {
         chain.doFilter(request, response);
     }
 
-    private static void responseJsonWriter(HttpServletResponse response, Map<String, Object> result) {
+    private static void responseJsonWriter(HttpServletResponse response, Result<Object> result) {
         response.setStatus(HttpServletResponse.SC_OK);
         response.setCharacterEncoding("utf-8");
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
