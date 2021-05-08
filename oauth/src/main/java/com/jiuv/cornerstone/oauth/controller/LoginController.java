@@ -24,7 +24,7 @@ import java.util.Objects;
  * @version: 1.0
  */
 @RestController
-@RequestMapping("/")
+@RequestMapping("/user")
 public class LoginController {
     /**
      * 过期时间 8 小时
@@ -58,7 +58,7 @@ public class LoginController {
         Map<String, String> result = new HashMap<>(1);
         result.put("token", token);
 
-        return Result.failure(HttpStatus.OK.value(), username + "登录成功", result);
+        return Result.success(result);
     }
 
 

@@ -1,6 +1,7 @@
 package com.jiuv.cornerstone.oauth.jwt;
 
 import cn.hutool.json.JSON;
+import com.jiuv.cornerstone.base.entity.Result;
 import com.jiuv.cornerstone.oauth.entity.UserInfo;
 import io.jsonwebtoken.*;
 
@@ -20,7 +21,9 @@ import java.util.Objects;
  * @version: 1.0
  */
 public class JwtUtil {
-    // token秘钥
+    /**
+     * token秘钥
+     */
     public static String SECRET = "qwerasdfdxzvdfajjlkjeiojznvxndjkfaowijeiodl";
 
     /**
@@ -85,23 +88,13 @@ public class JwtUtil {
      *         &emsp;&emsp;&emsp;&emsp;1005：过期<br/>
      *         &emsp;&emsp;&emsp;&emsp;1004：未登录
      */
-    public static Map<String, Object> validateJWT(String jwtStr) {
-        Map<String, Object> pojo = new HashMap<>();
+    public static Result<Claims> validateJWT(String jwtStr) {
         Claims claims;
         try {
             claims = parseJWT(jwtStr);
-            pojo.put("status", true);
-            pojo.put("code", 1000);
-            pojo.put("Claims", claims);
-        } catch (ExpiredJwtException e) {
-            pojo.put("status", false);
-            pojo.put("code", 1005);
-            e.printStackTrace();
+            return Result.success(claims);
         } catch (Exception e) {
-            pojo.put("status", false);
-            pojo.put("code", 1004);
-            e.printStackTrace();
+            return Result.failure(null);
         }
-        return pojo;
     }
 }

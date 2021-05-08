@@ -1,22 +1,18 @@
-package com.jiuv.cornerstone.oauth.config;
+package com.jiuv.cornerstone.oauth.beans;
 
-import cn.hutool.json.JSONUtil;
 import com.jiuv.cornerstone.base.entity.Result;
+import com.jiuv.cornerstone.oauth.util.ResponseUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -27,11 +23,12 @@ import java.util.Objects;
  * @version: 1.0
  */
 @Slf4j
+@Component
 public class CustomLogoutHandler implements LogoutHandler {
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         if (Objects.isNull(authentication)) {
-            responseJsonWriter(response, Result.failure(4001, "未登录"));
+            ResponseUtil.responseJsonWriter(response, Result.failure(4001, "未登录"));
             return;
         }
         User user = (User) authentication.getPrincipal();
@@ -50,20 +47,5 @@ public class CustomLogoutHandler implements LogoutHandler {
         log.info("用户：{}，退出时间：{}，IP:{}", username, LocalDateTime.now(), ip);
     }
 
-    private static void responseJsonWriter(HttpServletResponse response, Result<Object> result) {
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.setCharacterEncoding("utf-8");
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        PrintWriter printWriter = null;
-        try {
 
-            printWriter = response.getWriter();
-            printWriter.print(JSONUtil.toJsonStr(result));
-        } catch (IOException e) {
-            log.error("responseJsonWriter异常", e);
-        } finally {
-            printWriter.flush();
-            printWriter.close();
-        }
-    }
 }

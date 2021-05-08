@@ -1,14 +1,31 @@
 package com.jiuv.cornerstone.oauth.filter;
 
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.jiuv.cornerstone.base.entity.Result;
+import com.jiuv.cornerstone.oauth.entity.AuthorityInfo;
 import com.jiuv.cornerstone.oauth.entity.UserInfo;
 import com.jiuv.cornerstone.oauth.jwt.JwtUtil;
+import com.jiuv.cornerstone.oauth.util.ResponseUtil;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.CredentialsExpiredException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -17,8 +34,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @className: TestAFilter
@@ -29,47 +48,64 @@ import java.util.Objects;
  */
 
 @Slf4j
-public class JwtFilter extends GenericFilter {
+@Component
+public class JwtFilter extends OncePerRequestFilter {
+
+    private static final String AUTHENTICATION_PREFIX = "Bearer ";
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        HttpServletRequest req = (HttpServletRequest) request;
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         // 登录和退出不解析token
-        if (StrUtil.equals(req.getRequestURI(), "/login") || StrUtil.equals(req.getRequestURI(), "/logout")) {
-            chain.doFilter(request, response);
+        if (StrUtil.equals(request.getRequestURI(), "/login") || StrUtil.equals(request.getRequestURI(), "/logout")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        // 如果已经通过认证
+        if (SecurityContextHolder.getContext().getAuthentication() != null) {
+            filterChain.doFilter(request, response);
             return;
         }
 
-        // 获取 token ，注意获取方式要跟前台传的方式保持一致 这里请求时注意认证方式选择 Bearer Token，会用 header 传递
-        String token = req.getHeader("token");
-        if (StrUtil.isBlank(token)) {
-            responseJsonWriter((HttpServletResponse)response, Result.failure(4001, "token不得为空"));
-            return;
+        String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (StrUtil.isBlank(header) || !header.startsWith(AUTHENTICATION_PREFIX)) {
+            log.error("token为空");
+            ResponseUtil.responseJsonWriter(response, Result.failure(HttpStatus.UNAUTHORIZED.value(), "token为空"));
         }
-        Claims claims = JwtUtil.parseJWT(token);
-        if (Objects.isNull(claims)) {
-            responseJsonWriter((HttpServletResponse)response, Result.failure(500, "解析token失败"));
-            return;
+        String jwtToken = header.replace(AUTHENTICATION_PREFIX, "");
+        if (StrUtil.isBlank(jwtToken)) {
+            log.error("token为空");
+            ResponseUtil.responseJsonWriter(response, Result.failure(HttpStatus.UNAUTHORIZED.value(), "token为空"));
         }
-        String userStr = JSONUtil.toJsonStr(claims.get("userInfo"));
-        log.info("当前登录用户：{}", userStr);
-        UserInfo user = JSONUtil.toBean(userStr, UserInfo.class);
-        chain.doFilter(request, response);
+        try {
+            this.authenticationTokenHandle(jwtToken, request, response);
+        } catch (AuthenticationException e) {
+            log.error("认证异常", e);
+            ResponseUtil.responseJsonWriter(response, Result.failure(HttpStatus.UNAUTHORIZED.value(), "认证异常"));
+        }
+        filterChain.doFilter(request, response);
     }
 
-    private static void responseJsonWriter(HttpServletResponse response, Result<Object> result) {
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.setCharacterEncoding("utf-8");
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        PrintWriter printWriter = null;
-        try {
-            printWriter = response.getWriter();
-            printWriter.print(JSONUtil.toJsonStr(result));
-        } catch (IOException e) {
-            log.error("responseJsonWriter异常", e);
-        } finally {
-            printWriter.flush();
-            printWriter.close();
+    private void authenticationTokenHandle(String jwtToken, HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+
+        Result<Claims> result =  JwtUtil.validateJWT(jwtToken);
+        if (!result.getStatus()) {
+            ResponseUtil.responseJsonWriter(response, Result.failure(500, "token解析异常"));
         }
+        Claims claims = result.getData();
+        String username = claims.getSubject();
+        String userStr = JSONUtil.toJsonStr(claims.get("userInfo"));
+        log.info("当前登录用户：{}", userStr);
+        UserInfo userInfo = JSONUtil.toBean(userStr, UserInfo.class);
+        List<AuthorityInfo> authorityInfos = userInfo.getAuthorityInfoList();
+        List<String> authorityCodes = authorityInfos.stream().map(AuthorityInfo::getAuthorityCode).collect(Collectors.toList());
+        String roles = Convert.toStr(authorityCodes);
+        List<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList(roles);
+
+        User user = new User(username, "[PROTECTED]", authorities);
+        // 构建用户认证token
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(user, null, authorities);
+        usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+        // 放入安全上下文中
+        SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
     }
 }

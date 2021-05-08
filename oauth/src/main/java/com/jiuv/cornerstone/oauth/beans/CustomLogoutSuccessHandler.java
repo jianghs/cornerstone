@@ -1,20 +1,15 @@
-package com.jiuv.cornerstone.oauth.config;
+package com.jiuv.cornerstone.oauth.beans;
 
-import cn.hutool.json.JSONUtil;
 import com.jiuv.cornerstone.base.entity.Result;
+import com.jiuv.cornerstone.oauth.util.ResponseUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -25,34 +20,19 @@ import java.util.Objects;
  * @version: 1.0
  */
 @Slf4j
+@Component
 public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         if (Objects.isNull(authentication)) {
-            responseJsonWriter(response, Result.failure(4001, "未登录"));
+            ResponseUtil.responseJsonWriter(response, Result.failure(4001, "未登录"));
             return;
         }
         User user = (User) authentication.getPrincipal();
         String username = user.getUsername();
         log.info("username: {} 退出成功", username);
 
-        responseJsonWriter(response, Result.success(username + "退出成功"));
-    }
-
-    private static void responseJsonWriter(HttpServletResponse response, Result<Object> result) {
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.setCharacterEncoding("utf-8");
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        PrintWriter printWriter = null;
-        try {
-            printWriter = response.getWriter();
-            printWriter.print(JSONUtil.toJsonStr(result));
-        } catch (IOException e) {
-            log.error("responseJsonWriter异常", e);
-        } finally {
-            printWriter.flush();
-            printWriter.close();
-        }
+        ResponseUtil.responseJsonWriter(response, Result.success(username + "退出成功"));
     }
 }

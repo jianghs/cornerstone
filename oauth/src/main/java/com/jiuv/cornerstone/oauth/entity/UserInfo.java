@@ -36,6 +36,11 @@ public class UserInfo implements Serializable {
     private String email;
 
     /**
+     * token
+     */
+    private String token;
+
+    /**
      * 权限集合
      */
     private List<AuthorityInfo> authorityInfoList;

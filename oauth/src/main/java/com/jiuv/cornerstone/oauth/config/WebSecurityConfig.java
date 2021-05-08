@@ -1,6 +1,11 @@
 package com.jiuv.cornerstone.oauth.config;
 
+import com.jiuv.cornerstone.oauth.beans.CustomAuthenticationSuccessHandler;
+import com.jiuv.cornerstone.oauth.beans.CustomLogoutHandler;
+import com.jiuv.cornerstone.oauth.beans.CustomLogoutSuccessHandler;
 import com.jiuv.cornerstone.oauth.filter.JwtFilter;
+import org.omg.CORBA.PRIVATE_MEMBER;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -9,7 +14,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 /**
  * @className: WebSecurityConfig
@@ -21,6 +30,21 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private JwtFilter jwtFilter;
+
+    @Autowired
+    private LogoutHandler logoutHandler;
+
+    @Autowired
+    private LogoutSuccessHandler logoutSuccessHandler;
+
+    @Autowired
+    private AuthenticationSuccessHandler authenticationSuccessHandler;
+
+    @Autowired
+    private AuthenticationFailureHandler authenticationFailureHandler;
+
 
     /**
      * 核心过滤器，较少配置，过滤静态资源
@@ -48,13 +72,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // 前后端分离设置为无状态
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 // 自定义过滤器
-                .addFilterBefore(new JwtFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 // 认证
                 .authorizeRequests().antMatchers("/login", "/logout").permitAll().anyRequest().authenticated().and()
 //                // form表单登录配置，前后端分离项目可以忽略
-//                .and().formLogin().loginProcessingUrl("/process").successForwardUrl("/login/success").failureForwardUrl("/login/failure").and()
+//                .formLogin().loginProcessingUrl("/process").successForwardUrl("/login/success").failureForwardUrl("/login/failure").and()
+                .formLogin().loginProcessingUrl("/login").successHandler(authenticationSuccessHandler).failureHandler(authenticationFailureHandler).and()
 //                // 自定义退出处理 默认情况下清除认证信息 （invalidateHttpSession），和Session 失效（invalidateHttpSession） 已经由内置的SecurityContextLogoutHandler 来完成
-                .logout().addLogoutHandler(new CustomLogoutHandler()).logoutSuccessHandler(new CustomLogoutSuccessHandler());
+                .logout().addLogoutHandler(logoutHandler).logoutSuccessHandler(logoutSuccessHandler);
     }
 
 
