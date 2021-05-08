@@ -4,6 +4,8 @@ import com.jiuv.cornerstone.base.entity.Result;
 import com.jiuv.cornerstone.oauth.util.ResponseUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Component;
@@ -34,6 +36,7 @@ public class CustomLogoutHandler implements LogoutHandler {
         User user = (User) authentication.getPrincipal();
         String username = user.getUsername();
 
+        SecurityContextHolder.clearContext();
         // 记录用户下线退出时间、IP
         String ip = "";
         try {

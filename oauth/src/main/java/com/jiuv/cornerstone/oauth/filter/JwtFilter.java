@@ -51,8 +51,6 @@ import java.util.stream.Collectors;
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
-    private static final String AUTHENTICATION_PREFIX = "Bearer ";
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         // 登录和退出不解析token
@@ -66,16 +64,12 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        String header = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (StrUtil.isBlank(header) || !header.startsWith(AUTHENTICATION_PREFIX)) {
-            log.error("token为空");
-            ResponseUtil.responseJsonWriter(response, Result.failure(HttpStatus.UNAUTHORIZED.value(), "token为空"));
-        }
-        String jwtToken = header.replace(AUTHENTICATION_PREFIX, "");
+        String jwtToken = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (StrUtil.isBlank(jwtToken)) {
             log.error("token为空");
             ResponseUtil.responseJsonWriter(response, Result.failure(HttpStatus.UNAUTHORIZED.value(), "token为空"));
         }
+
         try {
             this.authenticationTokenHandle(jwtToken, request, response);
         } catch (AuthenticationException e) {
@@ -96,6 +90,8 @@ public class JwtFilter extends OncePerRequestFilter {
         String userStr = JSONUtil.toJsonStr(claims.get("userInfo"));
         log.info("当前登录用户：{}", userStr);
         UserInfo userInfo = JSONUtil.toBean(userStr, UserInfo.class);
+
+        // 配置权限
         List<AuthorityInfo> authorityInfos = userInfo.getAuthorityInfoList();
         List<String> authorityCodes = authorityInfos.stream().map(AuthorityInfo::getAuthorityCode).collect(Collectors.toList());
         String roles = Convert.toStr(authorityCodes);

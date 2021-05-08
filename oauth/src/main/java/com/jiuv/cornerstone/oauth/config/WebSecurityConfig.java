@@ -20,6 +20,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
+import javax.annotation.Resource;
+
 /**
  * @className: WebSecurityConfig
  * @description:
@@ -30,21 +32,20 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    @Autowired
+    @Resource
     private JwtFilter jwtFilter;
 
-    @Autowired
+    @Resource
     private LogoutHandler logoutHandler;
 
-    @Autowired
+    @Resource
     private LogoutSuccessHandler logoutSuccessHandler;
 
-    @Autowired
+    @Resource
     private AuthenticationSuccessHandler authenticationSuccessHandler;
 
-    @Autowired
+    @Resource
     private AuthenticationFailureHandler authenticationFailureHandler;
-
 
     /**
      * 核心过滤器，较少配置，过滤静态资源
