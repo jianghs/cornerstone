@@ -26,21 +26,25 @@
         <hutool-all.version>5.6.4</hutool-all.version>
         <base.version>0.0.1-SNAPSHOT</base.version>
         <oauth.version>0.0.1-SNAPSHOT</oauth.version>
+        <xxx.version>0.0.1-SNAPSHOT</xxx.version>
+        <cola.component.version>4.0.1</cola.component.version>
+        <lombok.version>1.18.12</lombok.version>
     </properties>
 
     <modules>
         <module>oauth</module>
         <module>base</module>
+        <module>xxx-app</module>
+        <module>xxx-domain</module>
+        <module>xxx-adapter</module>
+        <module>xxx-infra</module>
+        <module>xxx-client</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>com.jiuv.cornerstone</groupId>
-                <artifactId>oauth</artifactId>
-                <version>${oauth.version}</version>
-            </dependency>
 
+            <!-- springboot dependencies -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
@@ -49,10 +53,53 @@
                 <scope>import</scope>
             </dependency>
 
+            <!-- oauth dependencies -->
+            <dependency>
+                <groupId>com.jiuv.cornerstone</groupId>
+                <artifactId>oauth</artifactId>
+                <version>${oauth.version}</version>
+            </dependency>
+
+            <!-- base dependencies -->
             <dependency>
                 <groupId>com.jiuv.cornerstone</groupId>
                 <artifactId>base</artifactId>
                 <version>${base.version}</version>
+            </dependency>
+
+            <!-- client dependencies -->
+            <dependency>
+                <groupId>com.jiuv.cornerstone</groupId>
+                <artifactId>xxx-client</artifactId>
+                <version>${xxx.version}</version>
+            </dependency>
+
+            <!-- adapter dependencies -->
+            <dependency>
+                <groupId>com.jiuv.cornerstone</groupId>
+                <artifactId>xxx-adapter</artifactId>
+                <version>${xxx.version}</version>
+            </dependency>
+
+            <!-- app dependencies -->
+            <dependency>
+                <groupId>com.jiuv.cornerstone</groupId>
+                <artifactId>xxx-app</artifactId>
+                <version>${xxx.version}</version>
+            </dependency>
+
+            <!-- domain dependencies -->
+            <dependency>
+                <groupId>com.jiuv.cornerstone</groupId>
+                <artifactId>xxx-domain</artifactId>
+                <version>${xxx.version}</version>
+            </dependency>
+
+            <!-- infra dependencies -->
+            <dependency>
+                <groupId>com.jiuv.cornerstone</groupId>
+                <artifactId>xxx-infra</artifactId>
+                <version>${xxx.version}</version>
             </dependency>
 
             <dependency>
@@ -66,6 +113,34 @@
                 <artifactId>hutool-all</artifactId>
                 <version>${hutool-all.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/com.alibaba.cola/cola-component-dto -->
+            <dependency>
+                <groupId>com.alibaba.cola</groupId>
+                <artifactId>cola-component-dto</artifactId>
+                <version>${cola.component.version}</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/com.alibaba.cola/cola-component-exception -->
+            <dependency>
+                <groupId>com.alibaba.cola</groupId>
+                <artifactId>cola-component-exception</artifactId>
+                <version>${cola.component.version}</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/com.alibaba.cola/cola-component-catchlog-starter -->
+            <dependency>
+                <groupId>com.alibaba.cola</groupId>
+                <artifactId>cola-component-catchlog-starter</artifactId>
+                <version>${cola.component.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
