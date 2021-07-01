@@ -1,6 +1,7 @@
 package com.jiuv.cornerstone.user.dto;
 
 import com.alibaba.cola.dto.Command;
+import com.jiuv.cornerstone.user.dto.clientobject.UserCO;
 import lombok.Data;
 
 /**
@@ -12,4 +13,5 @@ import lombok.Data;
  */
 @Data
 public class UserUpdateCmd extends Command {
+    private UserCO userCO;
 }
