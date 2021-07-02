@@ -28,7 +28,7 @@
         <plugin type="org.mybatis.generator.plugins.ToStringPlugin"></plugin>
 
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://139.196.190.46:3306/conerstone?allowMultiQueries=true&amp;serverTimezone=Asia/Shanghai&amp;nullCatalogMeansCurrent=true&amp;tinyInt1isBit=true&amp;useSSL=false"
+                        connectionURL="jdbc:mysql://139.196.190.46:3306/conerstone?allowMultiQueries=true&amp;serverTimezone=Asia/Shanghai&amp;nullCatalogMeansCurrent=true&amp;tinyInt1isBit=false&amp;useSSL=false"
                         userId="root"
                         password="Jianghs@123">
             <property name="nullCatalogMeansCurrent" value="true" />
