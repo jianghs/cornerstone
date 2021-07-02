@@ -2,7 +2,7 @@ package com.jiuv.cornerstone.user.executor.command;
 
 import com.alibaba.cola.dto.Response;
 import com.jiuv.cornerstone.user.convertor.UserConvertor;
-import com.jiuv.cornerstone.user.dto.UserAddCmd;
+import com.jiuv.cornerstone.user.dto.UserUpdateCmd;
 import com.jiuv.cornerstone.user.gateway.UserGateway;
 import com.jiuv.cornerstone.user.model.User;
 import org.springframework.stereotype.Component;
@@ -21,7 +21,7 @@ public class UserUpdateCmdEex {
     @Resource
     private UserGateway userGateway;
 
-    public Response execute(UserAddCmd cmd) {
+    public Response execute(UserUpdateCmd cmd) {
         User user = UserConvertor.toEntity(cmd.getUserCO());
         userGateway.update(user);
         return Response.buildSuccess();

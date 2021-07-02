@@ -1,6 +1,16 @@
 package com.jiuv.cornerstone.user.executor.command.query;
 
+import cn.hutool.core.util.StrUtil;
+import com.alibaba.cola.dto.SingleResponse;
+import com.alibaba.cola.exception.Assert;
+import com.jiuv.cornerstone.user.dto.UserGetQry;
+import com.jiuv.cornerstone.user.dto.clientobject.UserCO;
+import com.jiuv.cornerstone.user.gatewayimpl.database.UserMapper;
+import com.jiuv.cornerstone.user.gatewayimpl.database.dataobject.UserDO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 /**
  * @className: UserGetQryExe
@@ -11,5 +21,16 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class UserGetQryExe {
+    @Resource
+    private UserMapper userMapper;
 
+    public SingleResponse<UserCO> execute(UserGetQry qry) {
+        Assert.notNull(qry, "入参不得为空");
+        Assert.isTrue(StrUtil.isBlank(qry.getUserName()), "用户名不得为空");
+
+        UserDO userDO = userMapper.selectByName(qry.getUserName());
+        UserCO userCO = new UserCO();
+        BeanUtils.copyProperties(userDO, userCO);
+        return SingleResponse.of(userCO);
+    }
 }

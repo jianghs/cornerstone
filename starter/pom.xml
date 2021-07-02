@@ -10,28 +10,16 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.jiuv.cornerstone</groupId>
-    <artifactId>xxx-app</artifactId>
+    <artifactId>starter</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>com.jiuv.cornerstone</groupId>
-            <artifactId>xxx-client</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.jiuv.cornerstone</groupId>
-            <artifactId>xxx-domain</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.jiuv.cornerstone</groupId>
-            <artifactId>xxx-infra</artifactId>
+            <artifactId>xxx-adapter</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
         </dependency>
     </dependencies>
 
@@ -40,6 +28,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>2.4.5</version>
             </plugin>
 
             <plugin>

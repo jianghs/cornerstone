@@ -12,6 +12,17 @@
     <groupId>com.jiuv.cornerstone</groupId>
     <artifactId>xxx-adapter</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <!-- app dependencies -->
+        <dependency>
+            <groupId>com.jiuv.cornerstone</groupId>
+            <artifactId>xxx-app</artifactId>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>

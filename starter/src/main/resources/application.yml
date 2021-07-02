@@ -1,0 +1,12 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://139.196.190.46:3306/conerstone?allowMultiQueries=true&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true&tinyInt1isBit=true&useSSL=false&characterEncoding=utf-8
+    username: root
+    password: Jianghs@123
+
+mybatis:
+  mapper-locations: classpath*:mybatis/*.xml

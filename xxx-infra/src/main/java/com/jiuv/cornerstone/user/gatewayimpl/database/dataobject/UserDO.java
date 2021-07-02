@@ -28,7 +28,7 @@ public class UserDO implements Serializable {
      *
      * @mbg.generated Thu Jul 01 14:53:15 CST 2021
      */
-    private Boolean sex;
+    private Integer sex;
 
     /**
      *
@@ -103,7 +103,7 @@ public class UserDO implements Serializable {
      *
      * @mbg.generated Thu Jul 01 14:53:15 CST 2021
      */
-    public Boolean getSex() {
+    public Integer getSex() {
         return sex;
     }
 
@@ -115,7 +115,7 @@ public class UserDO implements Serializable {
      *
      * @mbg.generated Thu Jul 01 14:53:15 CST 2021
      */
-    public void setSex(Boolean sex) {
+    public void setSex(Integer sex) {
         this.sex = sex;
     }
 

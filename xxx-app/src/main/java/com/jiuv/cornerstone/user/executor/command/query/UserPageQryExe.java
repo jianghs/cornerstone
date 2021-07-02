@@ -1,5 +1,8 @@
 package com.jiuv.cornerstone.user.executor.command.query;
 
+import com.alibaba.cola.dto.PageResponse;
+import com.jiuv.cornerstone.user.dto.UserPageQry;
+import com.jiuv.cornerstone.user.dto.clientobject.UserCO;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,4 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserPageQryExe {
 
+    public PageResponse<UserCO> execute(UserPageQry qry) {
+        return null;
+    }
 }

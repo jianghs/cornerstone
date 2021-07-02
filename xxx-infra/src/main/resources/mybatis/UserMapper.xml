@@ -63,4 +63,16 @@
     select id, `name`, sex, mobile
     from user
   </select>
+
+  <select id="selectByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select id, `name`, sex, mobile
+    from user
+    where name = #{name,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectBySex" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, `name`, sex, mobile
+    from user
+    where sex = #{sex,jdbcType=BIT}
+  </select>
 </mapper>

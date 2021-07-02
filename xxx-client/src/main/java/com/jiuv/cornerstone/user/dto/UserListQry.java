@@ -16,5 +16,5 @@ public class UserListQry extends Query {
     /**
      * 性别
      */
-    private String sex;
+    private Integer sex;
 }
