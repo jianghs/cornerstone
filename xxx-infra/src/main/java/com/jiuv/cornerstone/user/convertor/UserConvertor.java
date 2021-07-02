@@ -17,7 +17,6 @@ public class UserConvertor {
     public static User toEntity(UserCO userCO) {
         User user = new User();
         BeanUtils.copyProperties(userCO, user);
-
         return user;
     }
 

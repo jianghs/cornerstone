@@ -29,6 +29,7 @@ public class UserGatewayImpl implements UserGateway {
 
     @Override
     public void update(User user) {
-
+        UserDO userDO = UserConvertor.toDataObject(user);
+        userMapper.updateByPrimaryKey(userDO);
     }
 }

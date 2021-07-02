@@ -24,8 +24,6 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <jjwt.version>0.9.1</jjwt.version>
         <hutool-all.version>5.6.4</hutool-all.version>
-        <base.version>0.0.1-SNAPSHOT</base.version>
-        <oauth.version>0.0.1-SNAPSHOT</oauth.version>
         <xxx.version>0.0.1-SNAPSHOT</xxx.version>
         <cola.component.version>4.0.1</cola.component.version>
         <lombok.version>1.18.12</lombok.version>

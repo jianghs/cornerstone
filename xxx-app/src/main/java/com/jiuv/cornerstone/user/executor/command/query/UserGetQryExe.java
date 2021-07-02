@@ -11,6 +11,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.Objects;
 
 /**
  * @className: UserGetQryExe
@@ -26,11 +27,16 @@ public class UserGetQryExe {
 
     public SingleResponse<UserCO> execute(UserGetQry qry) {
         Assert.notNull(qry, "入参不得为空");
-        Assert.isTrue(StrUtil.isBlank(qry.getUserName()), "用户名不得为空");
+        Assert.isFalse(StrUtil.isBlank(qry.getUserName()), "用户名不得为空");
 
         UserDO userDO = userMapper.selectByName(qry.getUserName());
+        if (Objects.isNull(userDO)) {
+            return SingleResponse.of(new UserCO());
+        }
         UserCO userCO = new UserCO();
         BeanUtils.copyProperties(userDO, userCO);
+        userCO.setSexCode(userDO.getSex());
+        userCO.setSex(userDO.getSex() == 1 ? "男" : "女");
         return SingleResponse.of(userCO);
     }
 }

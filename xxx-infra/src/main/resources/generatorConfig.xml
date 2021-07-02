@@ -28,10 +28,14 @@
         <plugin type="org.mybatis.generator.plugins.ToStringPlugin"></plugin>
 
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://139.196.190.46:3306/conerstone?allowMultiQueries=true&amp;serverTimezone=Asia/Shanghai&amp;nullCatalogMeansCurrent=true&amp;tinyInt1isBit=false&amp;useSSL=false"
+                        connectionURL="jdbc:mysql://139.196.190.46:3306/conerstone"
                         userId="root"
                         password="Jianghs@123">
             <property name="nullCatalogMeansCurrent" value="true" />
+            <property name="tinyInt1isBit" value="false" />
+            <property name="useSSL" value="false" />
+            <property name="allowMultiQueries" value="true" />
+            <property name="serverTimezone" value="Asia/Shanghai" />
         </jdbcConnection>
 
         <!-- 默认false，把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer true，把JDBC DECIMAL 和 NUMERIC 类型解析为java.math.BigDecimal -->
