@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @className: UserListQryExe
@@ -28,9 +27,8 @@ public class UserListQryExe {
 
     public MultiResponse<UserCO> execute(UserListQry qry) {
         Assert.notNull(qry, "入参不得为空");
-        Assert.isFalse(Objects.isNull(qry.getSex()), "性别不得为空");
 
-        List<UserDO> userDOList = userMapper.selectBySex(qry.getSex());
+        List<UserDO> userDOList = userMapper.selectByCondition(qry);
 
         List<UserCO> userCOList = new ArrayList<>();
         userDOList.forEach(userDO -> {

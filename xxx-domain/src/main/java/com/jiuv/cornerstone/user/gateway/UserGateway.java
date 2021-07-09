@@ -22,4 +22,11 @@ public interface UserGateway {
      * @param user
      */
     void update(User user);
+
+    /**
+     * 根据用户名查询用户信息
+     * @param userName
+     * @return
+     */
+    User getUserByName(String userName);
 }

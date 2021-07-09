@@ -4,16 +4,20 @@ Content-Type: application/json
 
 {
   "userCO" : {
-    "name":"王五",
+    "name":"王五2",
     "sexCode":1,
     "sex":"男",
     "mobile":"123110111"
   }
 }
 
-### 根据性别查询用户list
-GET http://{{baseUrl}}/users?sex=1
-Accept: application/json
+### 查询用户list
+GET http://{{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "sex": 1
+}
 
 ### 根据姓名查询用户list
 GET http://{{baseUrl}}/user?name=张三

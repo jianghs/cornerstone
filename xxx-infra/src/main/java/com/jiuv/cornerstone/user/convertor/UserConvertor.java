@@ -20,6 +20,12 @@ public class UserConvertor {
         return user;
     }
 
+    public static User toEntity(UserDO userDO) {
+        User user = new User();
+        BeanUtils.copyProperties(userDO, user);
+        return user;
+    }
+
     public static UserDO toDataObject(User user) {
         UserDO userDO = new UserDO();
         BeanUtils.copyProperties(user, userDO);

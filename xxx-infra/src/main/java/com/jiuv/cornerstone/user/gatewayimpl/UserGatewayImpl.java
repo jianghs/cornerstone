@@ -8,6 +8,7 @@ import com.jiuv.cornerstone.user.model.User;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
+import java.util.Objects;
 
 /**
  * @className: UserGatewayImpl
@@ -31,5 +32,14 @@ public class UserGatewayImpl implements UserGateway {
     public void update(User user) {
         UserDO userDO = UserConvertor.toDataObject(user);
         userMapper.updateByPrimaryKey(userDO);
+    }
+
+    @Override
+    public User getUserByName(String userName) {
+        UserDO userDO = userMapper.selectByName(userName);
+        if (Objects.isNull(userDO)) {
+            return new User();
+        }
+        return UserConvertor.toEntity(userDO);
     }
 }

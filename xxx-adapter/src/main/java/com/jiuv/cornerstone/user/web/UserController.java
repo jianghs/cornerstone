@@ -43,9 +43,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/users")
-    private MultiResponse<UserCO> listUserBySex(@RequestParam Integer sex) {
-        UserListQry qry = new UserListQry();
-        qry.setSex(sex);
+    private MultiResponse<UserCO> listUser(@RequestBody UserListQry qry) {
         return userServiceI.listUserBy(qry);
     }
 
