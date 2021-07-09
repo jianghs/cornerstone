@@ -36,7 +36,8 @@ public class UserController {
 
     @PutMapping(value = "/user")
     private Response updateUser(@RequestBody UserUpdateCmd userUpdateCmd) {
-        long id = userUpdateCmd.getUserCO().getId();
+        UserCO userCO = userUpdateCmd.getUserCO();
+        Long id = userCO.getId();
         Assert.isFalse(Objects.isNull(id), "id不得为空" );
         return userServiceI.updateUser(userUpdateCmd);
     }

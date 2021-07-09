@@ -25,7 +25,7 @@ Content-Type: application/json
 
 {
   "userCO" : {
-    "id":4,
+
     "name":"王五1",
     "sexCode":1,
     "sex":"男",
