@@ -1,5 +1,6 @@
 package com.jiuv.cornerstone.user.executor.command.query;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.cola.dto.SingleResponse;
 import com.alibaba.cola.exception.Assert;
@@ -7,7 +8,6 @@ import com.jiuv.cornerstone.user.dto.UserGetQry;
 import com.jiuv.cornerstone.user.dto.clientobject.UserCO;
 import com.jiuv.cornerstone.user.gatewayimpl.database.UserMapper;
 import com.jiuv.cornerstone.user.gatewayimpl.database.dataobject.UserDO;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -33,8 +33,7 @@ public class UserGetQryExe {
         if (Objects.isNull(userDO)) {
             return SingleResponse.of(new UserCO());
         }
-        UserCO userCO = new UserCO();
-        BeanUtils.copyProperties(userDO, userCO);
+        UserCO userCO = BeanUtil.copyProperties(userDO, UserCO.class);
         userCO.setSexCode(userDO.getSex());
         userCO.setSex(userDO.getSex() == 1 ? "男" : "女");
         return SingleResponse.of(userCO);

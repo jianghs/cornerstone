@@ -1,14 +1,12 @@
 package com.jiuv.cornerstone.user.web;
 
 import com.alibaba.cola.dto.MultiResponse;
+import com.alibaba.cola.dto.PageResponse;
 import com.alibaba.cola.dto.Response;
 import com.alibaba.cola.dto.SingleResponse;
 import com.alibaba.cola.exception.Assert;
 import com.jiuv.cornerstone.user.api.UserServiceI;
-import com.jiuv.cornerstone.user.dto.UserAddCmd;
-import com.jiuv.cornerstone.user.dto.UserGetQry;
-import com.jiuv.cornerstone.user.dto.UserListQry;
-import com.jiuv.cornerstone.user.dto.UserUpdateCmd;
+import com.jiuv.cornerstone.user.dto.*;
 import com.jiuv.cornerstone.user.dto.clientobject.UserCO;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,9 +40,14 @@ public class UserController {
         return userServiceI.updateUser(userUpdateCmd);
     }
 
-    @GetMapping(value = "/users")
+    @GetMapping(value = "/users/list")
     private MultiResponse<UserCO> listUser(@RequestBody UserListQry qry) {
         return userServiceI.listUserBy(qry);
+    }
+
+    @GetMapping(value = "/users/page")
+    private PageResponse<UserCO> pageUser(@RequestBody UserPageQry qry) {
+        return userServiceI.pageUserBy(qry);
     }
 
     @GetMapping(value = "/user")

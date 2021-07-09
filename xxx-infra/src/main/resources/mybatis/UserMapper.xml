@@ -70,7 +70,7 @@
     where name = #{name,jdbcType=VARCHAR}
   </select>
 
-  <select id="selectByCondition" parameterType="com.jiuv.cornerstone.user.dto.UserListQry" resultMap="BaseResultMap">
+  <select id="selectByCondition" parameterType="com.jiuv.cornerstone.user.gatewayimpl.database.dataobject.UserDO" resultMap="BaseResultMap">
     select id, `name`, sex, mobile
     from user
     where 1=1

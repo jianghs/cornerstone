@@ -1,6 +1,5 @@
 package com.jiuv.cornerstone.user.gatewayimpl.database;
 
-import com.jiuv.cornerstone.user.dto.UserListQry;
 import com.jiuv.cornerstone.user.gatewayimpl.database.dataobject.UserDO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -51,5 +50,6 @@ public interface UserMapper {
 
     UserDO selectByName(String name);
 
-    List<UserDO> selectByCondition(@Param("qry") UserListQry qry);
+    List<UserDO> selectByCondition(@Param("qry") UserDO qry);
+
 }

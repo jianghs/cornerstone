@@ -12,14 +12,23 @@ Content-Type: application/json
 }
 
 ### 查询用户list
-GET http://{{baseUrl}}/users
+GET http://{{baseUrl}}/users/list
 Content-Type: application/json
 
 {
   "sex": 1
 }
 
-### 根据姓名查询用户list
+### 查询用户page
+GET http://{{baseUrl}}/users/page
+Content-Type: application/json
+
+{
+  "pageIndex": 2,
+  "pageSize": 3
+}
+
+### 根据姓名查询用户
 GET http://{{baseUrl}}/user?name=张三
 Accept: application/json
 

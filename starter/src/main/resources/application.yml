@@ -10,3 +10,10 @@ spring:
 
 mybatis:
   mapper-locations: classpath*:mybatis/*.xml
+
+######### 分页插件 ##########
+pagehelper:
+  helper-dialect: mysql
+  params: count=countSql
+  reasonable: false
+  support-methods-arguments: true

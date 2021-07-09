@@ -1,9 +1,9 @@
 package com.jiuv.cornerstone.user.convertor;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.jiuv.cornerstone.user.dto.clientobject.UserCO;
 import com.jiuv.cornerstone.user.gatewayimpl.database.dataobject.UserDO;
 import com.jiuv.cornerstone.user.model.User;
-import org.springframework.beans.BeanUtils;
 
 /**
  * @className: UserConvertor
@@ -15,21 +15,17 @@ import org.springframework.beans.BeanUtils;
 public class UserConvertor {
 
     public static User toEntity(UserCO userCO) {
-        User user = new User();
-        BeanUtils.copyProperties(userCO, user);
-        return user;
+        return BeanUtil.copyProperties(userCO, User.class);
     }
 
     public static User toEntity(UserDO userDO) {
-        User user = new User();
-        BeanUtils.copyProperties(userDO, user);
-        return user;
+        return BeanUtil.copyProperties(userDO, User.class);
     }
 
     public static UserDO toDataObject(User user) {
-        UserDO userDO = new UserDO();
-        BeanUtils.copyProperties(user, userDO);
+        UserDO userDO = BeanUtil.copyProperties(user, UserDO.class);
         userDO.setSex(user.getSexCode());
         return userDO;
     }
+
 }
