@@ -1,0 +1,34 @@
+### 新增用户
+POST http://{{baseUrl}}/user
+Content-Type: application/json
+
+{
+  "userCO" : {
+    "name":"王五",
+    "sexCode":1,
+    "sex":"男",
+    "mobile":"123110111"
+  }
+}
+
+### 根据性别查询用户list
+GET http://{{baseUrl}}/users?sex=1
+Accept: application/json
+
+### 根据姓名查询用户list
+GET http://{{baseUrl}}/user?name=张三
+Accept: application/json
+
+### 更新用户
+PUT http://{{baseUrl}}/user
+Content-Type: application/json
+
+{
+  "userCO" : {
+    "id":4,
+    "name":"王五1",
+    "sexCode":1,
+    "sex":"男",
+    "mobile":"123110111"
+  }
+}
